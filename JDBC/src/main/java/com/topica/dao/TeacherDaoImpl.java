@@ -1,5 +1,6 @@
 package com.topica.dao;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -89,5 +90,43 @@ public class TeacherDaoImpl implements TeacherDao {
 		} catch (ClassNotFoundException | SQLException e) {
 			System.err.println("Error: " + e.getMessage());
 		}
+	}
+
+	@Override
+	public String doTransfer2(int id_from, int id_to, double salary) {
+		Connection connection = null;
+		CallableStatement callableStatement = null;
+		String result = "";
+		try {
+			connection = MysqlConnection.getConnection();
+			String sql = "{Call doTransfer(?,?,?)}";
+			callableStatement = connection.prepareCall(sql);
+			callableStatement.setInt(1, id_from);
+			callableStatement.setInt(2, id_to);
+			callableStatement.setDouble(3, salary);
+			ResultSet resultSet = callableStatement.executeQuery();
+			while (resultSet.next()) {
+				result = resultSet.getString(1);
+			}
+			resultSet.close();
+		} catch (SQLException | ClassNotFoundException e) {
+			System.err.println("Error: " + e.getMessage());
+		} finally {
+			if(callableStatement != null) {
+				try {
+					callableStatement.close();
+				} catch (SQLException e) {
+					System.err.println("Error: " +  e.getMessage());
+				}
+			}
+			if(connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					System.err.println("Error: " +  e.getMessage());
+				}
+			}
+		}
+		return result;
 	}
 }

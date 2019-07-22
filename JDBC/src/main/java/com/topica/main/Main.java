@@ -16,8 +16,8 @@ public class Main {
 		for (Student student : students) {
 			System.out.println(student);
 		}
-	
 		TeacherDaoImpl teacherDaoImpl = new TeacherDaoImpl();
-		teacherDaoImpl.doTransfer(1, 2, 1000000);
+		teacherDaoImpl.doTransfer(1, 2, 2000000);
+		System.out.println(teacherDaoImpl.doTransfer2(1, 2, 5000000));
 	}
 }
